@@ -21,7 +21,7 @@ func greetingPrefix(language string) (prefix string) {
 	return
 }
 
-func hello(name, language string) string {
+func Hello(name, language string) string {
 	if name == "" {
 		name = "world"
 	}
@@ -30,5 +30,5 @@ func hello(name, language string) string {
 }
 
 func main() {
-	fmt.Println(hello("name", "language"))
+	fmt.Println(Hello("name", "language"))
 }
