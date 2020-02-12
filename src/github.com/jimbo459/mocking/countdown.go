@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"io"
-	"time"
 )
 
 type Sleeper interface {
@@ -13,11 +12,12 @@ type Sleeper interface {
 const finalWord = "Go!"
 const CountStart = 3
 
-func Countdown(w io.Writer) {
+func Countdown(w io.Writer, s Sleeper) {
 	for i := CountStart; i > 0; i-- {
-		time.Sleep(1 * time.Second)
+		s.Sleep()
 		fmt.Fprintln(w, i)
 	}
+	s.Sleep()
 	fmt.Fprint(w, finalWord)
 }
 
