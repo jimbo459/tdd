@@ -3,7 +3,17 @@ package main
 import (
 	"fmt"
 	"io"
+	"time"
 )
+
+type ConfigurableSleeper struct {
+	duration time.Duration
+	sleep    func(time.Duration)
+}
+
+func (cs *ConfigurableSleeper) Sleep() {
+	cs.sleep(cs.duration)
+}
 
 type Sleeper interface {
 	Sleep()
@@ -15,8 +25,6 @@ const CountStart = 3
 func Countdown(w io.Writer, s Sleeper) {
 	for i := CountStart; i > 0; i-- {
 		s.Sleep()
-	}
-	for i := CountStart; i > 0; i-- {
 		fmt.Fprintln(w, i)
 	}
 
