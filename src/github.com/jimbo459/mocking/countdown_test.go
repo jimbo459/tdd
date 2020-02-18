@@ -23,11 +23,11 @@ func (cs *CountdownOperationsSpy) Write(p []byte) (n int, err error) {
 }
 
 type SpyTime struct {
-	durationSlept time.Duration
+	timeSlept time.Duration
 }
 
 func (st *SpyTime) Sleep(duration time.Duration) {
-	st.durationSlept = duration
+	st.timeSlept = duration
 }
 
 func TestCountdown(t *testing.T) {
@@ -53,16 +53,16 @@ func TestCountdown(t *testing.T) {
 }
 
 func TestConfigurableSleeper(t *testing.T) {
-	sleepTime := 5 * time.Second
+	expectedDuration := 5 * time.Second
 
-	spyTime := &SpyTime{}
+	timeSpy := &SpyTime{}
 
-	sleeper := ConfigurableSleeper{sleepTime, spyTime.Sleep}
+	sleeper := &ConfigurableSleeper{expectedDuration, timeSpy.Sleep}
 
 	sleeper.Sleep()
 
-	if sleepTime != spyTime.durationSlept {
-		t.Errorf("wanted %v, got %v", sleepTime, spyTime.durationSlept)
+	if expectedDuration != timeSpy.timeSlept {
+		t.Errorf("expected %v, got %v", expectedDuration, timeSpy.timeSlept)
 	}
 
 }
