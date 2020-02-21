@@ -37,4 +37,3 @@ func main() {
 	sleeper := &ConfigurableSleeper{2 * time.Second, time.Sleep}
 	Countdown(os.Stdout, sleeper)
 }
-
