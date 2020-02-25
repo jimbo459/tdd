@@ -1,24 +1,69 @@
 package walk
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+)
+
+type Person struct {
+	Name     string
+	location Location
+}
+
+type Location struct {
+	City string
+}
 
 func TestWalk(t *testing.T) {
-	expected := "James"
-	var got []string
-
-	x := struct {
-		Name string
-	}{expected}
-
-	walk(x, func(input string){
-		got = append(got, input)
-	})
-
-	if len(got) != 1 {
-		t.Errorf("Expected number of argument calls incorrect, expected %d, actual %d", 1, len(got))
+	cases := []struct {
+		Name          string
+		Input         interface{}
+		ExpectedCalls []string
+	}{
+		{
+			"Struct with one string",
+			struct {
+				Name string
+			}{"James"},
+			[]string{"James"},
+		},
+		{
+			"Struct with two strings",
+			struct {
+				Name    string
+				Surname string
+			}{"James", "Norman"},
+			[]string{"James", "Norman"},
+		},
+		{
+			"Struct with differing types",
+			struct {
+				Name string
+				Age  int
+			}{"James", 30},
+			[]string{"James"},
+		},
+		{
+			"Struct with nested fields",
+			Person{
+				"James",
+				Location{"Amersham"},
+			},
+			[]string{"James", "Amersham"},
+		},
 	}
 
-	if got[0] != expected {
-		t.Errorf("got %q, want %q", got[0], expected)
+	for _, test := range cases {
+		t.Run(test.Name, func(t *testing.T) {
+			var got []string
+
+			walk(test.Input, func(input string) {
+				got = append(got, input)
+			})
+
+			if !reflect.DeepEqual(test.ExpectedCalls, got) {
+				t.Errorf("Walk return value incorrect. Expected %v, got %v", test.ExpectedCalls, got)
+			}
+		})
 	}
 }
