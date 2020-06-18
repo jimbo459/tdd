@@ -40,3 +40,16 @@ func assertCounter(t *testing.T, got *Counter, want int) {
 		t.Errorf("got %d, want %d", got.Value(), want)
 	}
 }
+
+func BenchmarkRepeat(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		counter := NewCounter()
+		counter.Inc()
+		counter.Inc()
+		counter.Inc()
+
+		if counter.Value() != 3 {
+			b.Errorf("got %d, want %d", counter.Value(), 3)
+		}
+	}
+}
