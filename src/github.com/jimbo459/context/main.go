@@ -9,15 +9,20 @@ import (
 func main(){
 	ctx := context.Background()
 
-	ctx, cancel := context.WithTimeout(ctx, 4 * time.Second)
+	ctx, cancel := context.WithTimeout(ctx, 2 * time.Second)
 
 	defer cancel()
 
+	sleepAndTalk(ctx, 3 * time.Second,"Slept and woke")
+
+}
+
+func sleepAndTalk(ctx context.Context,duration time.Duration, message string) {
 	select {
-	case <- time.After(2 * time.Second):
-		fmt.Println("Slept and awoke!")
+	case <- time.After(duration):
+		fmt.Println(message)
 	case <- ctx.Done():
-		fmt.Println("Context cancelled")
+		fmt.Printf("%v",ctx.Err().Error())
 	}
 
 }
