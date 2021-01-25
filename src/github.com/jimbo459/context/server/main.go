@@ -1,18 +1,20 @@
 package main
 
 import (
-	"context"
+	"fmt"
+	"log"
 	"net/http"
 )
 
 func main(){
-	http.HandleFunc(w http.ResponseWriter, r *http.Request)
+// GET requests wait 5 seconds then respond
 
-	ctx := context.Background()
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request){
+		log.Printf("%v", r.Header)
+		fmt.Fprintf(w, "Hello from the slow server")
+	})
 
-	ctx, cancel := context.WithCancel(ctx)
-
-
+	http.ListenAndServe(":8080", nil)
 
 
 }
